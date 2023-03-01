@@ -5,13 +5,16 @@ import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 
 import CourseForm from "./CourseForm";
+import Spinner from "../common/Spinner";
 import { newCourse } from "../../../tools/mockData";
 
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 function ManageCoursePage(props) {
     const { courses, authors, loadAuthors, loadCourses, saveCourse, history } = props
     const [course, setCourse] = useState({ ...props.course });
+    const [saving, setSaving] = useState(false);
     const [errors, setErrors] = useState({});
 
     // Use Effect Hook
@@ -42,18 +45,22 @@ function ManageCoursePage(props) {
     // Save Course Function
     function handleSave(event) {
         event.preventDefault();
+        setSaving(true);
         saveCourse(course).then(() => {
+            toast.success("Course Saved");
             history.push("/courses")
         });
     }
 
-    return <CourseForm course={course} errors={errors} authors={authors}
-        onChange={handleChange} onSave={handleSave}>
-    </CourseForm>
+
+    return (
+        authors.length === 0 || courses.length === 0 ? (<Spinner />) :
+            (<CourseForm course={course} errors={errors} authors={authors} saving={saving}
+                onChange={handleChange} onSave={handleSave}>
+            </CourseForm>)
+    )
 
 }
-
-
 
 ManageCoursePage.propTypes = {
     course: PropTypes.object.isRequired,
