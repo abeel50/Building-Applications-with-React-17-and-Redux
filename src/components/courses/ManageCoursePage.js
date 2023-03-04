@@ -49,6 +49,9 @@ function ManageCoursePage(props) {
         saveCourse(course).then(() => {
             toast.success("Course Saved");
             history.push("/courses")
+        }).catch(error => {
+            setSaving(false);
+            setErrors({ onSave: error.message });
         });
     }
 
