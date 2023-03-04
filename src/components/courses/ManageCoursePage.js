@@ -42,9 +42,24 @@ function ManageCoursePage(props) {
         }))
     }
 
+    // Checks if form is valid on not
+    function formIsValid() {
+        const { title, authorId, category } = course;
+        const errors = {};
+
+        if (!title) errors.title = "Title is required.";
+        if (!authorId) errors.authorId = "Author is required.";
+        if (!category) errors.category = "Category is required.";
+
+        setErrors(errors);
+        // form is valid if errors object has no properties
+        return Object.keys(errors).length === 0;
+    }
+
     // Save Course Function
     function handleSave(event) {
         event.preventDefault();
+        if (!formIsValid()) return;
         setSaving(true);
         saveCourse(course).then(() => {
             toast.success("Course Saved");
